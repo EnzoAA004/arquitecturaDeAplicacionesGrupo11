@@ -15,6 +15,7 @@ Arquitectura de microservicios con Spring Boot 3.4, Java 21 y Maven Multi-módul
 | **auth-service** | 8083 | Servicio de Identidad (JWT, BCrypt, H2) |
 | **api-gateway** | 8080 | Spring Cloud Gateway - OAuth2 Resource Server |
 | **inventory-service** | 8082 | Microservicio de inventario protegido (H2) |
+| **order-service** | 8085 | Microservicio de ordenes (JWT, H2, RabbitMQ) |
 | **notification-service** | 8084 | Consumidor de eventos (RabbitMQ o Kafka) |
 | **RabbitMQ** | 5672 / 15672 | Message Broker opción 1 (management UI en 15672) |
 | **Apache Kafka** | 9092 | Message Broker opción 2 (KRaft, sin Zookeeper) |
@@ -353,7 +354,10 @@ Ya instalado en `C:\Program Files\logstash-8.17.0\`. Usar el pipeline del proyec
    # Terminal 5 - API Gateway (puerto 8080) — levantar después de que los servicios estén en Eureka
    cd api-gateway && mvn spring-boot:run
 
-   # Terminal 6 - Notification Service (mismo profile que inventory)
+   # Terminal 6 - Order Service (mismo profile RabbitMQ del TP)
+   cd order-service && mvn spring-boot:run -Dspring-boot.run.profiles=rabbitmq
+
+   # Terminal 7 - Notification Service (mismo profile que inventory)
    cd notification-service && mvn spring-boot:run -Dspring-boot.run.profiles=rabbitmq
    # o para Kafka:
    # cd notification-service && mvn spring-boot:run -Dspring-boot.run.profiles=kafka
@@ -575,7 +579,7 @@ jwt:
   expiration-ms: 3600000  # 1 hora (solo auth-service)
 ```
 
-**Debe ser la misma** en auth-service, api-gateway e inventory-service.
+**Debe ser la misma** en auth-service, api-gateway, inventory-service y order-service.
 
 ## Seguridad
 
@@ -929,14 +933,14 @@ bin\logstash.bat -f "C:\Users\Usuario\Documents\uade\2026\arquitecturadeaplicaci
 
 3. **Servicios Spring Boot:**
    ```bash
-   docker compose --profile rabbitmq up config-server eureka-server auth-service api-gateway inventory-service-rabbitmq notification-service-rabbitmq
+   docker compose --profile rabbitmq up config-server eureka-server auth-service api-gateway inventory-service-rabbitmq order-service-rabbitmq notification-service-rabbitmq
    ```
 
 ### Integración con los microservicios
 
 Cada servicio está configurado para enviar logs en formato JSON a Logstash por TCP. La configuración incluye:
 
-1. **Dependencia Maven** — `logstash-logback-encoder` agregada a todos los servicios (`auth-service`, `api-gateway`, `inventory-service`, `notification-service`)
+1. **Dependencia Maven** — `logstash-logback-encoder` agregada a todos los servicios (`auth-service`, `api-gateway`, `inventory-service`, `order-service`, `notification-service`)
 
 2. **Configuración Logback** — Archivo `src/main/resources/logback-spring.xml` en cada servicio con:
    - Appender TCP que envía logs JSON a `localhost:5044`

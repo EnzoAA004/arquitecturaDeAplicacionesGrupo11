@@ -2,6 +2,7 @@
 @gatewayUrl = http://localhost:8080
 @inventoryUrl = http://localhost:8082
 @authUrl = http://localhost:8083
+@ordersUrl = http://localhost:8085
 
 ### ===================================================
 ### AUTH SERVICE
@@ -90,6 +91,56 @@ Authorization: {{token}}
 ###
 
 ### ===================================================
+### ORDER SERVICE — vía API Gateway (con JWT)
+### ===================================================
+
+### Crear orden
+POST {{gatewayUrl}}/api/orders
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+###
+
+### Obtener todas las ordenes
+GET {{gatewayUrl}}/api/orders
+Authorization: {{token}}
+
+###
+
+### Obtener orden por ID
+GET {{gatewayUrl}}/api/orders/1
+Authorization: {{token}}
+
+###
+
+### ===================================================
+### ORDER SERVICE — acceso directo (sin gateway)
+### ===================================================
+
+### Crear orden (directo)
+POST {{ordersUrl}}/api/orders
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "productId": 1,
+  "quantity": 1
+}
+
+###
+
+### Obtener ordenes (directo)
+GET {{ordersUrl}}/api/orders
+Authorization: {{token}}
+
+###
+
+### ===================================================
 ### HEALTH CHECKS
 ### ===================================================
 
@@ -105,6 +156,11 @@ GET http://localhost:8888/actuator/health
 
 ### Inventory Service
 GET {{inventoryUrl}}/actuator/health
+
+###
+
+### Order Service
+GET {{ordersUrl}}/actuator/health
 
 ###
 

@@ -7,6 +7,7 @@ COPY eureka-server/pom.xml   ./eureka-server/
 COPY auth-service/pom.xml    ./auth-service/
 COPY api-gateway/pom.xml     ./api-gateway/
 COPY inventory-service/pom.xml ./inventory-service/
+COPY order-service/pom.xml ./order-service/
 COPY notification-service/pom.xml ./notification-service/
 
 COPY inventory-service/src ./inventory-service/src

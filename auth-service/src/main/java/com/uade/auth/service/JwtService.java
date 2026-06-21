@@ -29,7 +29,7 @@ public class JwtService {
                 .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(secretKey)
+                .signWith(secretKey, Jwts.SIG.HS384)
                 .compact();
     }
 

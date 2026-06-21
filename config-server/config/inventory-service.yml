@@ -16,3 +16,19 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+jwt:
+  secret: MiClaveSecretaParaJWT_MuyLarga_Y_Segura_123456789
+
+management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.0

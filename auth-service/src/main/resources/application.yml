@@ -33,6 +33,7 @@ jwt:
 
 management:
   tracing:
+    enabled: false
     sampling:
       probability: 0.0
 

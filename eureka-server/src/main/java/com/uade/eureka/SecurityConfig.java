@@ -16,8 +16,7 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/eureka/**", "/actuator/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             );
 
         return http.build();
